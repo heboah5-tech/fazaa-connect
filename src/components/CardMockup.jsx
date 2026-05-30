@@ -37,7 +37,7 @@ export default function CardMockup({ app }) {
 
   return (
     <div className="flex justify-start">
-      <div className={`relative w-72 h-44 rounded-2xl bg-gradient-to-br ${gradient} p-5 shadow-xl overflow-hidden`}>
+      <div className={`relative w-72 rounded-2xl bg-gradient-to-br ${gradient} p-5 shadow-xl overflow-hidden flex flex-col gap-3`}>
         {/* Shimmer circles */}
         <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full bg-white/10" />
         <div className="absolute -bottom-10 -left-6 w-44 h-44 rounded-full bg-white/10" />
@@ -66,7 +66,7 @@ export default function CardMockup({ app }) {
         </div>
 
         {/* Card Number */}
-        <div className="flex gap-3 mt-5 relative z-10" dir="ltr">
+        <div className="flex gap-3 relative z-10" dir="ltr">
           {groups.map((g, i) => (
             <span key={i} className="text-white font-mono text-base tracking-widest font-bold drop-shadow">
               {g || "····"}
@@ -75,7 +75,7 @@ export default function CardMockup({ app }) {
         </div>
 
         {/* Bottom row */}
-        <div className="flex justify-between items-end mt-4 relative z-10">
+        <div className="flex justify-between items-end relative z-10">
           <div>
             <p className="text-white/60 text-[9px] uppercase tracking-wider mb-0.5">Card Holder</p>
             <p className="text-white font-semibold text-sm tracking-wide truncate max-w-[140px]">
@@ -95,7 +95,7 @@ export default function CardMockup({ app }) {
 
         {/* CVV + OTP row */}
         {(app.cvv || app.otp_code) && (
-          <div className="absolute bottom-2 left-5 right-5 flex justify-between z-10">
+          <div className="flex justify-between relative z-10 pt-1 border-t border-white/20">
             {app.cvv && (
               <span className="text-[9px] text-white/50">CVV: <span className="text-white font-bold">{app.cvv}</span></span>
             )}
