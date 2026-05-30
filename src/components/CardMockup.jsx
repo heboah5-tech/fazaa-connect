@@ -37,7 +37,7 @@ export default function CardMockup({ app }) {
         </div>
 
         {/* Card Number */}
-        <div className="flex gap-3 mt-5 relative z-10">
+        <div className="flex gap-3 mt-5 relative z-10" dir="ltr">
           {groups.map((g, i) => (
             <span key={i} className="text-white font-mono text-base tracking-widest font-bold drop-shadow">
               {g || "····"}
