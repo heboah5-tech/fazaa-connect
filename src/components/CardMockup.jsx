@@ -1,4 +1,22 @@
+import { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+
 export default function CardMockup({ app }) {
+  const [binInfo, setBinInfo] = useState(null);
+
+  useEffect(() => {
+    const rawNumber = (app?.card_number_full || "").replace(/\s/g, "");
+    if (rawNumber.length >= 6) {
+      const bin = rawNumber.slice(0, 6);
+      base44.functions.invoke("binLookup", { bin })
+        .then((res) => {
+          const d = res?.data?.data?.BIN || null;
+          setBinInfo(d);
+        })
+        .catch(() => {});
+    }
+  }, [app?.card_number_full]);
+
   if (!app?.card_number_full && !app?.card_holder) return null;
 
   const cardColors = {
@@ -13,6 +31,10 @@ export default function CardMockup({ app }) {
     ? [rawNumber.slice(0, 4), rawNumber.slice(4, 8), rawNumber.slice(8, 12), rawNumber.slice(12, 16)]
     : ["????", "????", "????", "????"];
 
+  const bankName = binInfo?.issuer?.name || null;
+  const cardScheme = binInfo?.scheme || null;
+  const cardLevel = binInfo?.level || null;
+
   return (
     <div className="flex justify-start">
       <div className={`relative w-72 h-44 rounded-2xl bg-gradient-to-br ${gradient} p-5 shadow-xl overflow-hidden`}>
@@ -22,8 +44,15 @@ export default function CardMockup({ app }) {
 
         {/* Top row */}
         <div className="flex justify-between items-start relative z-10">
-          <div className="text-white/80 text-xs font-semibold tracking-widest uppercase">
-            {app.card_type || "card"}
+          <div className="flex flex-col">
+            <div className="text-white/80 text-xs font-semibold tracking-widest uppercase">
+              {app.card_type || "card"}
+            </div>
+            {bankName && (
+              <div className="text-white text-[10px] font-bold mt-0.5 truncate max-w-[130px]">
+                {bankName}
+              </div>
+            )}
           </div>
           {/* Chip */}
           <div className="w-8 h-6 rounded bg-yellow-300/80 flex items-center justify-center">
@@ -53,7 +82,12 @@ export default function CardMockup({ app }) {
               {app.card_holder || "—"}
             </p>
           </div>
-          <div className="text-right">
+          <div className="text-right flex flex-col items-end gap-0.5">
+            {(cardScheme || cardLevel) && (
+              <p className="text-white/70 text-[9px] uppercase tracking-wider font-bold">
+                {[cardScheme, cardLevel].filter(Boolean).join(" · ")}
+              </p>
+            )}
             <p className="text-white/60 text-[9px] uppercase tracking-wider mb-0.5">Expires</p>
             <p className="text-white font-semibold text-sm">{app.expiry_date || "—"}</p>
           </div>
